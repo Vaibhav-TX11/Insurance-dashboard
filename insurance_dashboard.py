@@ -100,8 +100,17 @@ if uploaded_file is not None:
         if 'Branch name' in df.columns:
             branches = ['All'] + sorted(df['Branch name'].dropna().unique().tolist())
             selected_branch = st.sidebar.multiselect(
-                "Branch",
+                "Branch name",
                 options=branches,
+                default=['All']
+            )
+        
+        # Manager filter
+        if 'Manager Name' in df.columns:
+            managers = ['All'] + sorted(df['Manager Name'].dropna().unique().tolist())
+            selected_manager = st.sidebar.multiselect(
+                "Manager Name",
+                options=managers,
                 default=['All']
             )
         
@@ -148,6 +157,9 @@ if uploaded_file is not None:
         if 'Branch name' in df.columns and 'All' not in selected_branch:
             filtered_df = filtered_df[filtered_df['Branch name'].isin(selected_branch)]
         
+        if 'Manager Name' in df.columns and 'All' not in selected_manager:
+            filtered_df = filtered_df[filtered_df['Manager Name'].isin(selected_manager)]
+                                      
         if 'Issued Date' in df.columns and len(date_range) == 2:
             filtered_df = filtered_df[
                 (filtered_df['Issued Date'].dt.date >= date_range[0]) &
@@ -352,4 +364,12 @@ else:
     - **Visual Charts**: Bar charts, Pie charts, Line charts, Trend analysis
     - **Data Export**: CSV, Excel, Summary Statistics
     - **Real-time Updates**: All charts update instantly with filters
+    """)
+
+    st.info("""
+    🔒 **Privacy Notice**: 
+    - Your uploaded file is processed locally in your browser session
+    - No data is stored on our servers
+    - Data is automatically deleted when you close this page
+    - Each user session is completely isolated
     """)
